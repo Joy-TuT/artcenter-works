@@ -1,0 +1,21 @@
+html,body{
+    margin: 0;
+    width: 100vw;
+    height: 100vb;
+}
+
+img{
+    max-width: 100%;
+    max-height: 100% ;
+
+}
+.color-field{
+    background-color: rgb(162, 226, 205);
+    height: 300px;
+}
+
+header{
+    background-color: cornflowerblue;
+    padding: 10px;
+
+}
