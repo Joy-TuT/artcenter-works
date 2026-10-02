@@ -254,9 +254,6 @@ h1 em {
     letter-spacing: 1px;
 }
 
-/* =========================
-   用 CSS 画植物
-   ========================= */
 
 .plant {
     position: relative;
@@ -321,7 +318,6 @@ h1 em {
     transform: rotate(-65deg);
 }
 
-/* 第二株：圆叶 */
 .round-plant {
     transform: rotate(-9deg);
 }
@@ -337,7 +333,6 @@ h1 em {
     left: 42px;
 }
 
-/* 第三株：花 */
 .flower-plant .stem {
     height: 150px;
     transform: rotate(-5deg);
