@@ -1,0 +1,11 @@
+Problem 1: Meteor's Direction**
+
+I tried a few different directions for the meteor, but I liked it moving from the left to the bottom right the most. I also wanted it to start from different places each time.
+
+I changed `VelX` and `VelY` to control the direction and used `random()` to make it start at different heights.
+
+Problem 2: Non-linear Movement**
+
+The meteor was moving in a straight line, just like the ball we made in class. I wanted the movement to look more natural.
+
+I used `noise()` to change its speed and direction a little. Now it still moves toward the bottom right, but doesn't follow a perfectly straight line.
