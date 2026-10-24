@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowers and Leaves</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background: #f5f2eb;
+      color: #41463e;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+
+    h2 {
+      margin-top: 48px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+    }
+
+    iframe {
+      display: block;
+      width: 600px;
+      height: 600px;
+      border: 0;
+    }
+
+    .animation {
+      overflow-x: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>Flowers and Leaves</h1>
+
+    <p>
+      I wanted to make a small animation with soft colors.
+      The flowers rotate while the leaves float and sway
+      at different speeds.
+    </p>
+
+    <h2>Final Animation</h2>
+
+    <div class="animation">
+      <iframe
+        src="animation.html"
+        title="Rotating flowers and floating leaves">
+      </iframe>
+    </div>
+
+    <h2>Process</h2>
+
+    <section>
+      <h3>Step 1</h3>
+      <img src="images/step1.png" alt="A pink flower">
+      <p>
+        I started with a pink flower made from six ellipses.
+        I used rotate() to make the whole flower turn.
+      </p>
+    </section>
+
+    <section>
+      <h3>Step 2</h3>
+      <img src="images/step2.png" alt="A pink flower and a green leaf">
+      <p>
+        I moved the flower to the left and added a green leaf.
+        I used sin() to move the leaf up and down.
+      </p>
+    </section>
+
+    <section>
+      <h3>Step 3</h3>
+      <img src="images/step3.png" alt="A flower and a swaying leaf">
+      <p>
+        I added a swaying motion to the leaf.
+        The swaying and floating use different speeds,
+        so they do not move together exactly.
+      </p>
+    </section>
+
+    <section>
+      <h3>Step 4</h3>
+      <img src="images/step4.png" alt="A leaf with an uneven outline">
+      <p>
+        The leaf looked too much like a perfect oval.
+        I used noise() to make its outline slightly uneven.
+      </p>
+    </section>
+
+    <section>
+      <h3>Step 5</h3>
+      <img src="images/step5.png" alt="Pink and purple flowers with a leaf">
+      <p>
+        I added a smaller purple flower.
+        It turns in the opposite direction and more slowly
+        than the pink one.
+      </p>
+    </section>
+
+    <section>
+      <h3>Step 6</h3>
+      <img src="images/step6.png" alt="Two flowers and two floating leaves">
+      <p>
+        I added a smaller leaf near the bottom to balance the layout.
+        Its floating and swaying follow a different rhythm
+        from the larger leaf.
+      </p>
+    </section>
+  </main>
+</body>
+</html>
