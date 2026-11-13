@@ -1,116 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Little Garden</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collecting Stars</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/p5@2.3.4/lib/p5.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 
-  <style>
-    body {
-      margin: 24px;
-      background: #faf8f1;
-      color: #45503d;
-      font-family: Arial, sans-serif;
-      line-height: 1.7;
-    }
-
-    main {
-      max-width: 800px;
-      margin: auto;
-    }
-
-    h1 {
-      margin-bottom: 4px;
-    }
-
-    h2 {
-      margin-top: 32px;
-    }
-
-    #garden {
-      overflow-x: auto;
-    }
-
-    canvas {
-      display: block;
-    }
-
-    input {
-      vertical-align: middle;
-    }
-
-    img {
-      display: block;
-      max-width: 100%;
-      height: auto;
-    }
-  </style>
+    <script src="https://cdn.jsdelivr.net/npm/p5@2.3.4/lib/p5.min.js"></script>
+    <script src="https://unpkg.com/ml5@1/dist/ml5.js"></script>
 </head>
 
 <body>
-  <main>
-    <h1>Little Garden</h1>
-    <p>Plant flowers and see how they share water.</p>
-
-    <div id="controls"></div>
-    <div id="garden"></div>
-
-    <h2>How to Use</h2>
-    <p>
-      Click the soil to plant flowers. Move the slider to change
-      the rain. Press C to clear the garden.
-      Darker soil means more water.
-    </p>
-
-    <h2>My Idea</h2>
-    <p>
-      I wanted to make a small garden that changes depending on
-      how someone takes care of it. You can choose where to plant
-      flowers and how much it rains, but the flowers also depend
-      on the water they share.
-    </p>
-
-    <h2>Process</h2>
-    <p>
-      I used simple lines and ellipses to draw the plants.
-      Each flower is an object made from the Plant class.
-      It has its own position, height, color, and health.
-      The grow() function updates its growth and health,
-      and display() draws it.
-    </p>
-    <p>
-      I divided the soil into sections and used an array to
-      store their water levels. Rain adds water to each section.
-      Plants take water from the section they are planted in.
-      If several plants are in the same section, they share
-      the available water.
-    </p>
-
-    <h2>What Happens</h2>
-    <p>
-      When there is enough water, the flowers grow and bloom.
-      When water runs low, they stop growing and their colors
-      fade. Crowded sections can run out of water sooner,
-      so planting more flowers changes the conditions for
-      the flowers already there.
-    </p>
-    <p>
-      These simple rules can create different growth patterns.
-      The result depends on planting density and rainfall,
-      rather than a fixed animation.
-    </p>
-
-    <h2>UML Diagram</h2>
-    <img src="uml.png" alt="UML diagram showing the garden system">
-    <p>
-      Plant is the class defined in the code.
-      Garden represents the main sketch, and RainSlider
-      represents the slider created by p5.js.
-    </p>
-  </main>
-
-  <script src="sketch.js"></script>
+    <script src="sketch.js"></script>
 </body>
 </html>

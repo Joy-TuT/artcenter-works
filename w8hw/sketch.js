@@ -1,216 +1,164 @@
-let plants = []
-let water = []
-let rainSlider
-let rainLabel
-let soilSize = 40
+let handPose;
+let video;
+let hands = [];
 
-function setup() {
-  let canvas = createCanvas(800, 550)
-  canvas.parent("garden")
-  frameRate(60)
+let stars = [];
+let selectedStar = -1;
 
-  rainLabel = createSpan("Rain: 3 ")
-  rainLabel.parent("controls")
+async function setup() {
+  createCanvas(640, 480);
 
-  rainSlider = createSlider(0, 10, 3, 1)
-  rainSlider.parent("controls")
-  rainSlider.style("width", "150px")
+  video = createCapture(VIDEO, { flipped: true });
+  video.size(640, 480);
+  video.hide();
 
-  for (let i = 0; i < width / soilSize; i++) {
-    water.push(60)
-  }
+  handPose = await ml5.handPose({ flipped: true });
+  handPose.detectStart(video, gotHands);
+
+  stars = [
+    { x: 200, y: 150, size: 12 },
+    { x: 400, y: 100, size: 16 },
+    { x: 300, y: 300, size: 10 },
+    { x: 500, y: 350, size: 14 },
+    { x: 100, y: 400, size: 8 }
+  ];
 }
 
 function draw() {
-  background(244, 241, 229)
+  background(8, 13, 37);
 
-  let rain = rainSlider.value()
-  rainLabel.html("Rain: " + rain + " ")
+  if (hands.length > 0) {
+    let finger = hands[0].index_finger_tip;
+    let thumb = hands[0].thumb_tip;
 
-  noStroke()
-  fill(65, 80, 60)
-  textSize(14)
-  text("Click the soil to plant", 20, 30)
+    let d = dist(finger.x, finger.y, thumb.x, thumb.y);
+    let pinching = d < 30;
 
-  for (let i = 0; i < water.length; i++) {
-    water[i] += rain * 0.025
-    water[i] -= 0.015
-    water[i] = constrain(water[i], 0, 100)
+    if (pinching) {
+      if (selectedStar == -1) {
+        for (let i = 0; i < stars.length; i++) {
+          let starDistance = dist(
+            finger.x, finger.y,
+            stars[i].x, stars[i].y
+          );
 
-    let soilColor = map(water[i], 0, 100, 205, 135)
-
-    fill(soilColor, soilColor - 25, soilColor - 45)
-    rect(i * soilSize, 350, soilSize, 200)
-  }
-
-  stroke(155, 185, 195)
-  strokeWeight(2)
-
-  for (let i = 0; i < rain * 8; i++) {
-    let rainX = (i * 73) % width
-    let rainY = (frameCount * 4 + i * 47) % 350
-
-    line(rainX, rainY, rainX - 3, rainY + 9)
-  }
-
-  for (let i = 0; i < water.length; i++) {
-    let count = 0
-
-    for (let j = 0; j < plants.length; j++) {
-      if (plants[j].soil === i) {
-        count++
-      }
-    }
-
-    if (count > 0) {
-      let drink = min(water[i], count * 0.08)
-      water[i] -= drink
-
-      for (let j = 0; j < plants.length; j++) {
-        if (plants[j].soil === i) {
-          plants[j].grow(drink / count)
+          if (starDistance < 65) {
+            selectedStar = i;
+            break;
+          }
         }
       }
-    }
-  }
 
-  for (let i = 0; i < plants.length; i++) {
-    plants[i].display()
-  }
-}
-
-function mousePressed(event) {
-  if (event.target.tagName !== "CANVAS") {
-    return
-  }
-
-  if (
-    mouseX > 15 &&
-    mouseX < width - 15 &&
-    mouseY > 365 &&
-    mouseY < height - 15
-  ) {
-    plants.push(new Plant(mouseX, mouseY))
-  }
-}
-
-function keyPressed() {
-  if (key === "c" || key === "C") {
-    plants = []
-
-    for (let i = 0; i < water.length; i++) {
-      water[i] = 60
-    }
-  }
-}
-
-class Plant {
-  constructor(x, y) {
-    this.x = x
-    this.y = y
-    this.height = 10
-    this.maxHeight = random(65, 110)
-    this.soil = floor(x / soilSize)
-    this.health = 100
-
-    this.flowerColor = random([
-      "#D9919B",
-      "#E6BD64",
-      "#B5A0CC",
-      "#E5A17D"
-    ])
-  }
-
-  grow(amount) {
-    if (amount > 0.04) {
-      this.height += amount * 0.5
-      this.health += 0.15
+      if (selectedStar != -1) {
+        stars[selectedStar].x = finger.x;
+        stars[selectedStar].y = finger.y;
+      }
+      else{
+        stars.push({ x: finger.x, y: finger.y, size: random(4, 20) })
+      }
     } else {
-      this.health -= 0.08
+      selectedStar = -1;
     }
 
-    this.height = constrain(this.height, 10, this.maxHeight)
-    this.health = constrain(this.health, 0, 100)
+  } else {
+    selectedStar = -1;
   }
 
-  display() {
-    let topY = this.y - this.height
-    let green = map(this.health, 0, 100, 115, 155)
+  for (let i = 0; i < stars.length; i++) {
+    for (let j = i + 1; j < stars.length; j++) {
+      let d = dist(
+        stars[i].x, stars[i].y,
+        stars[j].x, stars[j].y
+      );
 
-    stroke(105, green, 85)
-    strokeWeight(3)
-    line(this.x, this.y, this.x, topY)
+      if (d < 180) {
+        stroke(200, 220, 255, map(d, 0, 180, 150, 0));
+        strokeWeight(1);
 
-    noStroke()
-    fill(105, green, 85)
-
-    ellipse(
-      this.x - 8,
-      this.y - this.height * 0.4,
-      19,
-      8
-    )
-
-    ellipse(
-      this.x + 8,
-      this.y - this.height * 0.65,
-      19,
-      8
-    )
-
-    if (this.height > 35) {
-      let flowerSize = map(
-        this.height,
-        35,
-        this.maxHeight,
-        5,
-        15
-      )
-
-      let flowerTint = lerpColor(
-        color("#B8AD95"),
-        color(this.flowerColor),
-        this.health / 100
-      )
-
-      fill(flowerTint)
-
-      ellipse(
-        this.x - flowerSize / 2,
-        topY,
-        flowerSize,
-        flowerSize
-      )
-
-      ellipse(
-        this.x + flowerSize / 2,
-        topY,
-        flowerSize,
-        flowerSize
-      )
-
-      ellipse(
-        this.x,
-        topY - flowerSize / 2,
-        flowerSize,
-        flowerSize
-      )
-
-      ellipse(
-        this.x,
-        topY + flowerSize / 2,
-        flowerSize,
-        flowerSize
-      )
-
-      fill(244, 215, 125)
-
-      ellipse(
-        this.x,
-        topY,
-        flowerSize * 0.65,
-        flowerSize * 0.65
-      )
+        line(
+          stars[i].x, stars[i].y,
+          stars[j].x, stars[j].y
+        );
+      }
     }
   }
+
+  noStroke();
+
+  for (let i = 0; i < stars.length; i++) {
+    drawStar(stars[i].x, stars[i].y, stars[i].size);
+  }
+
+  if (hands.length > 0) {
+    let finger = hands[0].index_finger_tip;
+    let thumb = hands[0].thumb_tip;
+
+    let d = dist(finger.x, finger.y, thumb.x, thumb.y);
+    let pinching = d < 30;
+
+    noStroke();
+
+    if (pinching) {
+      fill(255, 235, 160, 25);
+      circle(finger.x, finger.y, 48);
+
+      fill(255, 235, 160, 70);
+      circle(finger.x, finger.y, 26);
+
+      fill(255, 245, 200);
+      circle(finger.x, finger.y, 8);
+    } else {
+      fill(220, 235, 255, 20);
+      circle(finger.x, finger.y, 42);
+
+      fill(220, 235, 255, 60);
+      circle(finger.x, finger.y, 24);
+
+      fill(255);
+      circle(finger.x, finger.y, 6);
+    }
+  }
+
+  image(video, 480, 10, 150, 112);
+
+  noFill();
+  stroke(255, 100);
+  strokeWeight(1);
+  rect(480, 10, 150, 112);
+}
+
+function drawStar(x, y, size) {
+  noStroke();
+
+  fill(255, 240, 160, 15);
+  circle(x, y, size * 4);
+
+  fill(255, 240, 160, 35);
+  circle(x, y, size * 2.5);
+
+  fill(255, 245, 190);
+
+  beginShape();
+
+  for (let i = 0; i < 10; i++) {
+    let angle = TWO_PI / 10 * i - HALF_PI;
+    let r;
+
+    if (i % 2 == 0) {
+      r = size;
+    } else {
+      r = size * 0.45;
+    }
+
+    let sx = x + cos(angle) * r;
+    let sy = y + sin(angle) * r;
+
+    vertex(sx, sy);
+  }
+
+  endShape(CLOSE);
+}
+
+function gotHands(results) {
+  hands = results;
 }
