@@ -52,9 +52,8 @@ function draw() {
       if (selectedStar != -1) {
         stars[selectedStar].x = finger.x;
         stars[selectedStar].y = finger.y;
-      }
-      else{
-        stars.push({ x: finger.x, y: finger.y, size: random(4, 20) })
+      } else {
+        stars.push({ x: finger.x, y: finger.y, size: random(4, 20) });
       }
     } else {
       selectedStar = -1;
@@ -86,7 +85,16 @@ function draw() {
   noStroke();
 
   for (let i = 0; i < stars.length; i++) {
-    drawStar(stars[i].x, stars[i].y, stars[i].size);
+    let brightness = map(
+      sin(frameCount * 0.04 + i * 2),
+      -1, 1, 0.3, 1
+    );
+
+    if (selectedStar == i) {
+      brightness = 2;
+    }
+
+    drawStar(stars[i].x, stars[i].y, stars[i].size, brightness);
   }
 
   if (hands.length > 0) {
@@ -99,14 +107,14 @@ function draw() {
     noStroke();
 
     if (pinching) {
-      fill(255, 235, 160, 25);
-      circle(finger.x, finger.y, 48);
+      fill(255, 235, 160, 40);
+      circle(finger.x, finger.y, 64);
 
-      fill(255, 235, 160, 70);
-      circle(finger.x, finger.y, 26);
+      fill(255, 235, 160, 90);
+      circle(finger.x, finger.y, 34);
 
       fill(255, 245, 200);
-      circle(finger.x, finger.y, 8);
+      circle(finger.x, finger.y, 12);
     } else {
       fill(220, 235, 255, 20);
       circle(finger.x, finger.y, 42);
@@ -127,16 +135,16 @@ function draw() {
   rect(480, 10, 150, 112);
 }
 
-function drawStar(x, y, size) {
+function drawStar(x, y, size, brightness) {
   noStroke();
 
-  fill(255, 240, 160, 15);
-  circle(x, y, size * 4);
+  fill(255, 240, 160, 15 * brightness);
+  circle(x, y, size * 4.8);
 
-  fill(255, 240, 160, 35);
-  circle(x, y, size * 2.5);
+  fill(255, 240, 160, 35 * brightness);
+  circle(x, y, size * 3);
 
-  fill(255, 245, 190);
+  fill(255, 245, 190, min(255, 255 * brightness));
 
   beginShape();
 
